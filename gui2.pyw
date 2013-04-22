@@ -151,7 +151,7 @@ class Ui_MainWindow(object):
             start = inside.find(link_tag,start)
             end = inside.find('</link>', start)
             #print inside[start + len(title_tag):end] + "."
-            str2 = inside[start + len(link_tag):end] 
+            str3 = inside[start + len(link_tag):end] 
             start = end
 
             start = inside.find(des_tag,start)
@@ -164,15 +164,16 @@ class Ui_MainWindow(object):
             list_data.append(tup)
         final = ""
         for i in range(len(list_data)):
-            final += "  date:"
+            final += str(i+1) + "####################################################\n"
+            final += "date:\n"
             final += list_data[i][0]
-            final += "  title:"
+            final += "\ntitle:\n"
             final += list_data[i][1]
-            final += "  link:"
+            final += "\nlink:\n"
             final += list_data[i][2]
-            final += "  description:"
+            final += "\ndescription:\n"
             final += list_data[i][3]
-            final += "\n"
+            final += "#############################################################\n"
 
         self.textBrowser.setText(final)
          
