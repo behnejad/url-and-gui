@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
+'''
+Created on Apr 22, 2013
 
-# Form implementation generated from reading ui file 'untitled.ui'
-#
-# Created: Mon Apr 22 09:46:29 2013
-#      by: PyQt4 UI code generator 4.9.6
-#
-# WARNING! All changes made in this file will be lost!
-
-
+@author: Maryachi
+'''
+import urllib2
 from PyQt4 import QtCore, QtGui
+from database import *
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -39,7 +36,7 @@ class Ui_MainWindow(object):
         self.search = QtGui.QGroupBox(self.centralwidget)
         self.search.setGeometry(QtCore.QRect(20, 50, 571, 91))
         self.search.setObjectName(_fromUtf8("search"))
-        self.Day = QtGui.QLineEdit(self.search)
+        self.Day = QtGui.QSpinBox(self.search)
         self.Day.setGeometry(QtCore.QRect(40, 20, 111, 21))
         self.Day.setObjectName(_fromUtf8("Day"))
         self.label_day = QtGui.QLabel(self.search)
@@ -48,7 +45,7 @@ class Ui_MainWindow(object):
         self.label_month = QtGui.QLabel(self.search)
         self.label_month.setGeometry(QtCore.QRect(190, 20, 46, 21))
         self.label_month.setObjectName(_fromUtf8("label_month"))
-        self.Month = QtGui.QLineEdit(self.search)
+        self.Month = QtGui.QComboBox(self.search)
         self.Month.setGeometry(QtCore.QRect(230, 20, 113, 20))
         self.Month.setObjectName(_fromUtf8("Month"))
         self.label_year = QtGui.QLabel(self.search)
@@ -86,17 +83,44 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
 
+#        daytext = QtCore.QStringList()
+#        daytext.append("Sun")
+#        daytext.append("Mon")
+#        daytext.append("Thu")
+#        daytext.append("Wed")
+#        daytext.append("Thr")
+#        daytext.append("Fri")
+#        daytext.append("Sat")
+        self.Day.setMinimum(1)
+        self.Day.setMaximum(31)
+        
+        monthtext = QtCore.QStringList()
+        monthtext.append("Jun")
+        monthtext.append("Feb")
+        monthtext.append("Mar")
+        monthtext.append("Apr")
+        monthtext.append("May")
+        monthtext.append("Jun")
+        monthtext.append("Jul")
+        monthtext.append("Aug")
+        monthtext.append("Sep")
+        monthtext.append("Oct")
+        monthtext.append("Nov")
+        monthtext.append("Dec")
+        self.Month.addItems(monthtext)
+                           
+        
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionExit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.readrss)
+        QtCore.QObject.connect(self.Search, QtCore.SIGNAL(_fromUtf8("clicked()")), self.search_rss)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),MainWindow,self.salam)
-
-    def salam():
-        print self.adressbar.text()
+        self.adressbar.setText("http://www.techworld.com/rss/feeds/techworld-news.xml")
+        self.textBrowser.setText("default adress:\nhttp://www.techworld.com/rss/feeds/techworld-news.xml")
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "HuLANTu-merj-rss reader", None))
         self.adressbar.setStatusTip(_translate("MainWindow", "type your adress", None))
         self.pushButton.setText(_translate("MainWindow", "Go", None))
         self.search.setTitle(_translate("MainWindow", "Search", None))
@@ -118,6 +142,89 @@ class Ui_MainWindow(object):
         self.actionAbout.setStatusTip(_translate("MainWindow", "About Application", None))
 
 
+    def readrss(self):
+        db = RssDatabase()
+        self.textBrowser.setText("")
+        adress = self.adressbar.text()
+        print adress
+        "http://www.techworld.com/rss/feeds/techworld-news.xml"
+        url = urllib2.Request(url = str(adress))
+        url_open_use = urllib2.urlopen(url)
+        inside = url_open_use.read()
+
+        title_tag = '<title>'
+        date_tag = '<pubDate>'
+        des_tag = '<description>'
+        link_tag = '<link>'
+        start=0
+        list_data = []
+
+        while inside.find(title_tag,start) != -1:
+            str1 = ""
+            str2 = ""
+            str3 = ""
+            str4 = ""
+
+            start = inside.find(date_tag,start)
+            end = inside.find('</pubDate>',start)
+            #print inside[start + len(date_tag):end] + "."
+            str1 = inside[start + len(date_tag)+5:end-13] 
+            start = end
+
+            start = inside.find(title_tag,start)
+            end = inside.find('</title>', start)
+            #print inside[start + len(title_tag):end] + "."
+            str2 = inside[start + len(title_tag):end] 
+            start = end
+
+            start = inside.find(link_tag,start)
+            end = inside.find('</link>', start)
+            #print inside[start + len(title_tag):end] + "."
+            str3 = inside[start + len(link_tag):end] 
+            start = end
+
+            start = inside.find(des_tag,start)
+            end = inside.find('.&lt',start)
+            #print inside[start + len(des_tag):end] + "." + "\n"
+            str4 = inside[start + len(des_tag):end] + "." + "\n"
+            start = end
+
+            tup = (str1, str2, str3, str4)
+            list_data.append(tup)
+        
+        
+        final = ""
+        db.insertdata(list_data)
+        db.closdb()
+        
+        for i in range(len(list_data)):
+            final += "####################### rss no:" + str(i+1) + "#############################\n"
+            final += "date:\n"
+            final += list_data[i][0]
+            final += "\ntitle:\n"
+            final += list_data[i][1]
+            final += "\nlink:\n"
+            final += list_data[i][2]
+            final += "\ndescription:\n"
+            final += list_data[i][3]
+            final += "#############################################################\n"
+
+        self.textBrowser.setText(final)
+        
+    def search_rss(self):
+        db = RssDatabase()
+        date =''
+        date += (str(self.Day.value()))
+        date += ' '
+        date += (str(self.Month.currentText()))
+        date += ' '
+        date += (str(self.Year.value()))
+        final = db.showbydate(date)
+        self.textBrowser.clear()
+        self.textBrowser.setText(final)
+        db.closdb()
+        pass
+         
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
@@ -126,4 +233,6 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+QtGui.QCloseEvent()
 
