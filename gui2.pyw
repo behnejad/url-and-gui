@@ -84,6 +84,7 @@ class Ui_MainWindow(object):
 
         self.adressbar.setText("http://www.techworld.com/rss/feeds/techworld-news.xml")
         self.textBrowser.setText("default adress:\nhttp://www.techworld.com/rss/feeds/techworld-news.xml")
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "HuLANTu-merj-rss reader", None))
         self.adressbar.setStatusTip(_translate("MainWindow", "type your adress", None))
@@ -105,6 +106,7 @@ class Ui_MainWindow(object):
         self.actionExit.setShortcut(_translate("MainWindow", "Ctrl+Q", None))
         self.actionAbout.setText(_translate("MainWindow", "About", None))
         self.actionAbout.setStatusTip(_translate("MainWindow", "About Application", None))
+
 
     def readrss(self):
         self.textBrowser.setText("")
@@ -154,7 +156,9 @@ class Ui_MainWindow(object):
 
             tup = (str1, str2, str3, str4)
             list_data.append(tup)
+        
         final = ""
+
         for i in range(len(list_data)):
             final += "####################### rss no:" + str(i+1) + "#############################\n"
             final += "date:\n"
