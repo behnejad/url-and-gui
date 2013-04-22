@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'untitled.ui'
-#
-# Created: Mon Apr 22 10:05:48 2013
-#      by: PyQt4 UI code generator 4.9.6
-#
-# WARNING! All changes made in this file will be lost!
-
 import urllib2
 from PyQt4 import QtCore, QtGui
 
@@ -91,6 +82,7 @@ class Ui_MainWindow(object):
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.readrss)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.adressbar.setText("http://www.techworld.com/rss/feeds/techworld-news.xml")
         self.textBrowser.setText("default adress:\nhttp://www.techworld.com/rss/feeds/techworld-news.xml")
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "HuLANTu-merj-rss reader", None))
@@ -164,7 +156,7 @@ class Ui_MainWindow(object):
             list_data.append(tup)
         final = ""
         for i in range(len(list_data)):
-            final += str(i+1) + "####################################################\n"
+            final += "####################### rss no:" + str(i+1) + "#############################\n"
             final += "date:\n"
             final += list_data[i][0]
             final += "\ntitle:\n"
