@@ -25,6 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(608, 430)
+        self.mainlayout = QtGui.QGridLayout(MainWindow)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.adressbar = QtGui.QLineEdit(self.centralwidget)
@@ -108,7 +109,8 @@ class Ui_MainWindow(object):
         monthtext.append("Nov")
         monthtext.append("Dec")
         self.Month.addItems(monthtext)
-                           
+        
+        self.
         
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionExit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
