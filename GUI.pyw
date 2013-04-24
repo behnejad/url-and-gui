@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         monthtext.append("Dec")
         self.Month.addItems(monthtext)
         
-        self.
+        
         
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionExit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
